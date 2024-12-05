@@ -1,4 +1,4 @@
-//This is a forked version of the original snake game with modified UI elements. still has nonfunctioning parts like game over
+//This is a forked version of snake game main with more modified UI elements. partaily unfinished
 //when printed, headY starts from 0 while headX starts from 1
 //hitboxQ is colored Nums and anything saying hitbox is colored nums
 var field = []
@@ -7,6 +7,8 @@ var direction;
 var amount;
 var headX;
 var headY;
+var startX;
+var startY;
 var running;
 var xLimit;
 var yLimit;
@@ -61,12 +63,12 @@ function commence(){
   button.onclick = function() {stop()}
   button.innerText = "Stop"
   reset();
-  let wideth = document.getElementById("widthInput").value
-  let hight = document.getElementById("heightInput").value
-  let amont = document.getElementById("amountInput").value
-  let sped = 1000/(document.getElementById("speedInput").value)
-  setup(wideth,hight,amont);
-  run(sped);
+  let widthInput = document.getElementById("widthInput").value
+  let heightInput = document.getElementById("heightInput").value
+  let amountInput = document.getElementById("amountInput").value
+  let speedInput = 1000/(document.getElementById("speedInput").value)
+  setup(widthInput,heightInput,amountInput);
+  run(speedInput);
 }
 function changeRunOptions(){
   runType = runSelect.options[runSelect.selectedIndex].value
@@ -98,17 +100,12 @@ function shuffleApple(reuse){
   /*appleX = Math.floor(Math.random() * xLimit)
   appleY = Math.floor(Math.random() * yLimit)*/
   for(let i = 0; i < active.length; i++){
-    //debugconsole.log("active i value is " + String(active[i]))
-    //debugconsole.log("apple coordinates are " + String([appleX, appleY]))
     if(String(active[i]) == String([appleX, appleY])){
-      //debugconsole.log("spawn on snake")
-      //debugconsole.log("was " +String(appleX) + " " + String(appleY))
       appleArray.splice(appleCoordsIndex, 1)
       shuffleApple(true)
       break
     }
   }
-  //debugconsole.log("After set(appleArray(" +String(appleArray) + ") active(" + String(active) + ") appleX(" + String(appleX) + ")  appleY(" + String(appleY) + ") headX and Y(" + String(headX) + "," + String(headY) + "))")
 }
 function makeOpp(direct, compare){
   if(oldDirection == compare){
@@ -123,7 +120,6 @@ function compareStop(){
     for(let j = (active.length);j > i; j--){
       if(String(active[i]) == String(active[j])){
         selfCrash = true
-        //debugconsole.log("ran compareStop")
         break
       }
     }
@@ -148,11 +144,10 @@ function onKeyDown(event){
 }
 function flip(x, y){
   field[y][x] = 0-((field[y][x])-1)
-  //debugconsole.log("this is flip(" + String(x) + "," + String(y) + ")")
 }
 function setup(width, height, startAmount){
   if(width < 4 || height < 4){
-    alert("The width or height must be greater than 4")
+    alert("The width or height must be 4 or greater")
   }
   else if(width * height < startAmount){
     alert("The starting amount must be smaller than the total amount of spaces")
@@ -166,12 +161,18 @@ function setup(width, height, startAmount){
         field[y][x] = 0
       }
     }
-    headX = ((width - (width % 2))/2)-1
-    headY = ((height - (height % 2))/2)-1
+    //declaring the start of the player
+    startX = ((width - (width % 2))/2)-1
+    startY = ((height - (height % 2))/2)-1
+    headX = startX
+    headY = startY
     amount = startAmount
     originalAmount = amount
     direction = "right"
     active.push([headX, headY])
+    //bad fix for the first of the snakes pixels not showing part 1
+    flip(headX, headY)
+    //end
   }
 }
 function runGame(){
@@ -188,65 +189,19 @@ function runGame(){
 }
 function consoleRun(){
   if(stopped == false){
-    for(let i=0; i<10; i++){
-      console.log();
-    }
-    for(let i = 0; i < field.length; i++){
-      console.log(field[i])
-    }
+    console.log(field)
     console.log("end of consoleRun")
   }
 }
 function pageRun(){
   if(stopped == false){
-    if(stepNum == 1 && ranBef == false){
-      let board = document.createElement("div");
-      board.id = "board"
-      document.body.appendChild(board)
-      ranBef = true;
-      for(let i = 0; i < field.length; i++){
-        let row = document.createElement("div");
-        for(let j = 0; j < field[i].length; j++){
-          //debugconsole.log("this is i for ranbeffalse " + i + " and this is j " + j)
-          value = document.createElement("SPAN");
-          value.innerText = field[i][j]
-          value.style.marginLeft = "5px"
-          value.style.marginRight = "5px"
-          if(coloredNumsChecked==true){
-            if(value.innerText == 1){
-              value.style.color = 'blue'
-            }
-            if(i==headY && j==headX){
-              value.style.color = "yellow"
-            }
-            if(i==appleY && j==appleX){
-              value.style.color = "red"
-            }
-          }
-          if(coloredBlocksChecked == true){
-            value.style.backgroundColor = "black"
-            if(value.innerText == 1){
-              value.style.backgroundColor = 'blue'
-            }
-            if(i==headY && j==headX){
-              value.style.backgroundColor = "yellow"
-            }
-            if(i==appleY && j==appleX){
-              value.style.backgroundColor = "red"
-            }
-          }
-          if(hideNumsChecked==true){
-            value.innerText = " "
-          }
-          row.appendChild(value)
-        }
-        document.getElementById("board").appendChild(row);
+    //updates steps counter on display
+    document.getElementById("steps").innerText = stepNum;
+    if(stepNum == 1){
+      //This statement is for generating a new game
+      if(ranBef == true){
+        document.getElementById("board").remove()
       }
-    }
-    else if(stepNum == 1 && ranBef == true){
-      //debugconsole.log("csdsafdadsafeswgfe")
-      document.getElementById("board").remove()
-      //debugconsole.log("ran remove")
       let board = document.createElement("div");
       board.id = "board"
       document.body.appendChild(board)
@@ -264,7 +219,7 @@ function pageRun(){
             if(i==headY && j==headX){
               value.style.color = "yellow"
             }
-            if(i==appleX && j==appleX){
+            if(i==appleY && j==appleX){
               value.style.color = "red"
             }
           }
@@ -276,7 +231,7 @@ function pageRun(){
             if(i==headY && j==headX){
               value.style.backgroundColor = "yellow"
             }
-            if(i==appleX && j==appleX){
+            if(i==appleY && j==appleX){
               value.style.backgroundColor = "red"
             }
           }
@@ -287,7 +242,12 @@ function pageRun(){
         }
         document.getElementById("board").appendChild(row);
       }
+      //This allows the board to get removed when reran
+      if(ranBef == false){
+        ranBef = true
+      }
     }
+    //This else is for regenerating the board every interval
     else{
       let board = document.getElementById("board")
       for(let o = 0; o < board.childNodes.length; o++){
@@ -348,6 +308,11 @@ function stop(){
   }
 }
 function step(){
+  //bad fix for the first of the snakes pixels not showing part 2
+  if(stepNum+1 ==amountInput.value){
+    flip(startX, startY)
+  }
+  //end
   stepNum++
   oldDirection = direction
   switch(direction){
@@ -366,10 +331,9 @@ function step(){
   }
   active.push([headX, headY])
   compareStop()
-  //debugconsole.log("actives length is " + active.length)
   console.log()
   if(headX < 0 || headX > xLimit-1 || headY < 0 || headY > yLimit-1 || selfCrash == true){
-    if(active.length <= xLimit * yLimit ){
+    if(active.length >= xLimit * yLimit ){
       win = true
     }
     stop()
@@ -381,10 +345,9 @@ function step(){
       let removed = active.shift()
       if(stepNum > amount){
         flip(removed[0], removed[1])
+      }
     }
-  }
     if(headX == appleX && headY == appleY){
-      //debugconsole.log("collect")
       amount++
       flip(appleX, appleY)
       shuffleApple(false)
