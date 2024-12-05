@@ -1,14 +1,61 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>replit</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
   </head>
-  <body>
-    <button onclick="start(4,4); run(1000)">run in console</button>
-    <button onclick="stop()">stop</button>
-    <div id="board"></div>
+  <body onload="preload()">
+    <div id="inputContainer">
+      <div class="inputBox">
+        <label for="widthInput">Width:</label>
+        <input id="widthInput" type=text placeholder=Width value=8></input>
+      </div>
+      <div class="inputBox">
+        <label for="heightInput">Height:</label>
+        <input id="heightInput" type=text placeholder=Height value=8></input>
+      </div>
+      <div class="inputBox">
+        <label for="amountInput">Amount:</label>
+        <input id="amountInput" type=text placeholder=Amount value=8></input>
+      </div>
+      <div class="inputBox">
+        <label for="speedInput">Speed:</label>
+        <input id="speedInput" type=text placeholder= "Speed (Updates per second)" value=2></input>
+      </div>
+    </div>
+    <div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <label for="where">Where to run the game:</label>
+    <select name="where" id="where" >
+        <option value="page">Page</option>
+        <option value="console">Console</option>
+      </select>
+      </br>
+      <div id="displayOptions">
+        <label for="coloredNums">Colored Numbers?:</label>
+        <input type="checkbox" id="coloredNums"></input>
+        <label for="numHeadCol"></label>
+      </br>
+        <label for="coloredBlocks">Colored Blocks?:</label>
+        <input type="checkbox" id="coloredBlocks"></input>
+        </br>
+        <label for="hideNums">Hide Numbers?:</label> 
+        <input type="checkbox" id="hideNums"></input>
+      </div>
+      <br>
+      <div id="buttonHolder">
+        <button id="runButton" onclick="commence()">Run</button>
+      </div>
+        <!--<div id="board">
+        </div>-->
+      </div>
     <script src="script.js"></script>
   </body>
 </html>
